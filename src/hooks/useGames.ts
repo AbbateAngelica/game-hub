@@ -24,10 +24,12 @@ interface FetchGames {
 const useGames = () => {
     const [games, setGames] = useState<Game[]>([]);
     const [error, setError] = useState("");
+    const [isLoading, setLoading] = useState(false);
   
     useEffect(() => {
     const controller = new AbortController();
       const allUsers = async () => {
+        setLoading(true);
         try {
           const res = await apiClient.get<FetchGames>("/games", {signal: controller.signal});
           setGames(res.data.results);
@@ -36,10 +38,13 @@ const useGames = () => {
           setError((err as AxiosError).message);
         }
         controller.abort();
+        setLoading(false);
       };
+      
       allUsers();
+      
     }, []);
-    return {games, error};
+    return {games, error, isLoading};
 }
 
 export default useGames;
