@@ -5,7 +5,7 @@ export interface Game {
     id: number;
     name: string;
     background_image: string; 
-    parent_platforms: { platform: Platform}[]
+    parent_platforms?: { platform: Platform}[]
     metacritic: number,
   }
   
@@ -15,19 +15,13 @@ export interface Platform {
   slug: string,
 }
 
-// const onFilteredGames = () => {
-//   const filteredGames = [...games];
-//     filteredGames.filter((game) =>
-//       game.id
-//     );
-// }
-
 const useGames = (gameQuery : GameQuery) => 
 useData<Game>("/games", {
   params: {
     genres: gameQuery.genre?.id, 
     parent_platforms: gameQuery.platform?.id ,
-    ordering: gameQuery.sortOrder
+    ordering: gameQuery.sortOrder,
+    search: gameQuery.searchText,
   }}, 
   [
     gameQuery
