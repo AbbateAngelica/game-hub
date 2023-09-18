@@ -3,11 +3,16 @@ import { ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
+  isFlex?: boolean;
 }
 
-const GameCardContainer = ({ children }: Props) => {
+const GameCardContainer = ({ children, isFlex = false }: Props) => {
   return (
-    <Box borderRadius={10} overflow={"hidden"}>
+    <Box
+      display={isFlex ? "flex" : "block"}
+      borderRadius={10}
+      overflow={"hidden"}
+    >
       {children}
     </Box>
   );
