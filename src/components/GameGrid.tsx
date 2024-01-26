@@ -1,16 +1,24 @@
-import { SimpleGrid, Text } from "@chakra-ui/react";
+import { Button, SimpleGrid, Text } from "@chakra-ui/react";
 import useGames, { Game } from "../hooks/useGames";
 import GameCard from "./GameCard";
 import GameCardSkeleton from "./GameCardSkeleton";
 import GameCardContainer from "./GameCardContainer";
 import { GameQuery } from "../App";
+import React from "react";
 
 interface Props {
   gameQuery: GameQuery;
 }
 
 const GameGrid = ({ gameQuery }: Props) => {
-  const { data: games, error, isLoading } = useGames(gameQuery);
+  const {
+    data: games,
+    error,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGames(gameQuery);
   const skeleton = [1, 2, 3, 4, 5];
 
   return (
@@ -27,14 +35,23 @@ const GameGrid = ({ gameQuery }: Props) => {
               <GameCardSkeleton />
             </GameCardContainer>
           ))}
-        {games?.results.map((i: Game) => {
-          return (
-            <GameCardContainer isFlex key={i.id}>
-              <GameCard game={i} />
-            </GameCardContainer>
-          );
-        })}
+        {games?.pages.map((page, index) => (
+          <React.Fragment key={index}>
+            {page.results.map((i: Game) => {
+              return (
+                <GameCardContainer isFlex key={i.id}>
+                  <GameCard game={i} />
+                </GameCardContainer>
+              );
+            })}
+          </React.Fragment>
+        ))}
       </SimpleGrid>
+      {hasNextPage && (
+        <Button onClick={() => fetchNextPage()} marginBottom={5}>
+          {isFetchingNextPage ? "Loading..." : "Load more"}
+        </Button>
+      )}
     </>
   );
 };
