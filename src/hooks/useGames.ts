@@ -16,7 +16,10 @@ const apiClient = new APIClient<Game>("/games");
 
 const useGames = (gameQuery: GameQuery) =>
   useInfiniteQuery<FetchResponse<Game>, Error>({
-    queryKey: ["games", gameQuery],
+    queryKey: [
+      "games",
+      { genreID: gameQuery?.genre?.id, platformID: gameQuery?.platform?.id },
+    ],
     queryFn: ({ pageParam = 1 }) =>
       apiClient.getAll({
         params: {
